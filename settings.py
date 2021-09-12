@@ -1,1 +1,1 @@
-TOKEN = "ODg2NTg0MDYwMzU5NjM5MDgw.YT3tvw.S88JH9dn7ySk0AdSgjpIo5Lw5dk"
+TOKEN = "//token//"
