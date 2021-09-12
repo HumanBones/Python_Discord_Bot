@@ -7,7 +7,7 @@ For env i used Pipenv.
 python -m pip install pipenv
 ```
 
-## Installing requiroments with pipenv
+## Installing requirements with pipenv
 
 ```
 pipenv install
