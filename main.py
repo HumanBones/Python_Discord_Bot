@@ -21,6 +21,7 @@ class BotCommands(commands.Cog):
     async def on_ready(self):
         print("bot online")
 
+#Write commands starting with @commands.command() and then write an async def
 
     @commands.command()
     async def ping(self, ctx):
@@ -36,6 +37,12 @@ class BotCommands(commands.Cog):
         random.shuffle(self.words)
         self.word = random.choice(self.words)
         await ctx.send("Your word is: "+ self.word)
+    
+    @commands.command()
+    async def roll(self, ctx, num):
+        self._num = int(num)
+        self.rez = random.randint(0,self._num)
+        await ctx.send(self.rez)
 
 
 bot = commands.Bot(command_prefix="!")
@@ -45,9 +52,6 @@ bot = commands.Bot(command_prefix="!")
 async def on_ready():
     print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(bot))
 
-#@bot.event
-#async def on_message(message):
-#    print("Message from {0.author}: {0.content}".format(message))
 
 bot.add_cog(BotCommands(bot))
 init_logger()
