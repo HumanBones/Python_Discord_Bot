@@ -7,6 +7,11 @@ verify_ssl = true
 
 [packages]
 discord = "*"
+youtube-dl = "*"
+pynacl = "*"
+ffmpeg-python = "*"
+ffmpeg = "*"
+ffprobe = "*"
 
 [requires]
 python_version = "3.9"

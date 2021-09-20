@@ -2,10 +2,17 @@ import discord
 import settings
 import logging
 import random
+import os
+import youtube_dl
 from discord.ext import commands, tasks 
 
 
 TOKEN = settings.TOKEN
+bot = commands.Bot(command_prefix="!")
+
+ydl_opts = {
+    'format': '250'
+}
 
 def init_logger():
     logger = logging.getLogger("discord")
@@ -44,8 +51,81 @@ class BotCommands(commands.Cog):
         self.rez = random.randint(0,self._num)
         await ctx.send(self.rez)
 
+    @commands.command()
+    async def join(self, ctx, channel="General"):
+      voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=channel)
+      voice = discord.utils.get(bot.voice_clients, guild=ctx.guild) 
 
-bot = commands.Bot(command_prefix="!")
+      if voice is None:
+          await voiceChannel.connect()
+
+      else:
+        await ctx.send("Already in voice channel!")
+    
+    @commands.command()
+    async def play(self, ctx, url : str):
+      voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+      song_there = os.path.isfile("song.mp3")
+
+      if voice is None:
+        await ctx.send("Not in voice channel! Use command !join")
+      
+      try:
+          if song_there:
+            os.remove("song.mp3")
+
+      except PermissionError:
+          await ctx.send("Song already playing!")
+          return
+
+
+      with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+      for file in os.listdir("./"):
+        if file.endswith(".webm"):
+          os.rename(file, "song.webm")
+      
+      voice.play(discord.FFmpegOpusAudio("song.webm"))
+
+      
+
+
+      
+
+    @commands.command()
+    async def fuckoff(self, ctx):
+      voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+      if voice is not None:
+        await voice.disconnect()
+      else:
+        await ctx.send("Not connected.\nWhy you bully me? :(")
+
+    @commands.command()
+    async def pause(self, ctx):
+      voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+      if voice.is_playing():
+        voice.pause()
+      else:
+        await ctx.send("No auido is playing!")
+
+    @commands.command()
+    async def resume(self, ctx):
+      voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+      if voice.is_paused():
+        voice.resume()
+      else:
+        await ctx.send("No auido paused!")
+
+    @commands.command()
+    async def stop(self, ctx):
+      voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+      if voice.is_playing():
+        voice.stop()
+      else:
+        await ctx.send("No auido is playing!Are you def")
+
+
+
 
 
 @bot.event
