@@ -1,3 +1,5 @@
 **settings.py
 *.log
+*.webm
+*.mp3
 __pycache__/
